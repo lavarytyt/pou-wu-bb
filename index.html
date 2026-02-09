@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Choupinette 💖</title>
+
+<style>
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(120deg,#ffc0cb,#ffffff);
+    overflow-x:hidden;
+    overflow-y:hidden;
+}
+
+.container{
+    text-align:center;
+    margin-top:10vh;
+}
+
+h1{color:#ff2f7d;}
+p{font-size:18px;}
+
+input{
+    padding:15px;
+    width:340px;
+    border-radius:30px;
+    border:none;
+    font-size:16px;
+    outline:none;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 35px;
+    border:none;
+    border-radius:30px;
+    background:#ff5fa2;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+#error{
+    margin-top:12px;
+    color:#ff3366;
+    font-weight:bold;
+}
+
+#love{
+    display:none;
+    position:relative;
+    width:100%;
+    height:70vh;
+}
+
+.photo-card{
+    width:280px;
+    margin:0 auto;
+    padding:15px;
+    border-radius:25px;
+    background:white;
+    box-shadow:0 15px 35px rgba(0,0,0,0.25);
+    opacity:0;
+    position:absolute;
+    left:50%;
+    top:0;
+    transform:translateX(-50%) translateY(50px);
+}
+
+.photo-card img{
+    width:100%;
+    border-radius:20px;
+}
+
+.photo-card p{
+    margin-top:10px;
+    font-size:18px;
+    color:#ff2f7d;
+    font-weight:bold;
+    text-align:center;
+}
+
+.heart{
+    position:absolute;
+    font-size:20px;
+    pointer-events:none;
+    animation:float 6s linear forwards;
+}
+
+@keyframes slideUp{
+    0% {opacity:0; transform:translateY(50px);}
+    100% {opacity:1; transform:translateY(0);}
+}
+
+@keyframes slideDown{
+    0% {opacity:1; transform:translateY(0);}
+    100% {opacity:0; transform:translateY(-50px);}
+}
+
+@keyframes float{
+    from {transform: translateY(100vh) rotate(0deg);}
+    to {transform: translateY(-10vh) rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="question">
+    <h1>💌 Question pour Choupinette 💌</h1>
+    <p><strong>KISA DEPI VARY WÈ LI TONBE DEPALE ?</strong></p>
+
+    <input type="text" id="answer" placeholder="Écris la réponse 💕">
+    <br>
+    <button onclick="checkAnswer()">Valider 💖</button>
+
+    <div id="error"></div>
+</div>
+
+<div class="container" id="love">
+    <div class="photo-card" id="photo1"><img src="photo1.jpg"><p>I love you ❤️</p></div>
+    <div class="photo-card" id="photo2"><img src="photo2.jpg"><p>I love you ❤️</p></div>
+    <div class="photo-card" id="photo3"><img src="photo3.jpg"><p>I love you ❤️</p></div>
+</div>
+
+<script>
+const goodAnswer = "fraises";
+let heartInterval;
+
+function checkAnswer(){
+    let user = document.getElementById("answer").value
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g," ");
+
+    if(user === goodAnswer){
+        document.getElementById("question").style.display="none";
+        document.getElementById("love").style.display="block";
+        startSlideshowLoop();
+    } else {
+        document.getElementById("error").innerText = "Eseye ankò bbm 💕";
+    }
+}
+
+// Slideshow ak loop, chak foto rete 5 segond epi disparèt
+function startSlideshowLoop(){
+    const photos = [
+        document.getElementById("photo1"),
+        document.getElementById("photo2"),
+        document.getElementById("photo3")
+    ];
+
+    function runSlideshow(){
+        // Reset foto
+        photos.forEach(p => {p.style.opacity=0; p.style.transform="translateX(-50%) translateY(50px)";});
+
+        // Foto 1
+        photos[0].style.animation = "slideUp 1s forwards";
+        setTimeout(()=>{
+            photos[0].style.animation = "slideDown 1s forwards";
+        }, 5000);
+
+        // Foto 2
+        setTimeout(()=>{
+            photos[1].style.animation = "slideUp 1s forwards";
+            setTimeout(()=>{
+                photos[1].style.animation = "slideDown 1s forwards";
+            },5000);
+        }, 5500);
+
+        // Foto 3
+        setTimeout(()=>{
+            photos[2].style.animation = "slideUp 1s forwards";
+            startHearts(); // kòmanse emoji pandan foto 3 vizib
+            setTimeout(()=>{
+                photos[2].style.animation = "slideDown 1s forwards";
+            },5000);
+        }, 11000);
+
+        // Rekòmanse loop apre tout foto fini (~16.5s)
+        setTimeout(runSlideshow, 16500);
+    }
+
+    runSlideshow();
+}
+
+// Emoji animasyon ak ti drift + rotation
+function startHearts(){
+    const emojis = ["💗","🤍","💋","💘"];
+    if(heartInterval) clearInterval(heartInterval);
+
+    heartInterval = setInterval(()=>{
+        let h=document.createElement("div");
+        h.className="heart";
+        h.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+        h.style.left = Math.random()*100+"vw";
+        h.style.fontSize = (20+Math.random()*25)+"px";
+
+        // Ajoute ti drift
+        h.style.transition = "transform 6s linear";
+        document.body.appendChild(h);
+        setTimeout(()=>{
+            h.style.transform = `translateY(-100vh) rotate(${Math.random()*360}deg) translateX(${(Math.random()-0.5)*50}px)`;
+        },10);
+        setTimeout(()=>h.remove(),6000);
+    },300);
+}
+</script>
+
+</body>
+</html>
